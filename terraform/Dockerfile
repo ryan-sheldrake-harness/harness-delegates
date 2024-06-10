@@ -17,6 +17,7 @@ RUN apt-get update  \
     findutils \
     tar \
     gzip \
+    zip \
     git \
     locales \
     curl \
@@ -44,6 +45,10 @@ ARG TARGETARCH
 ARG BASEURL=https://app.harness.io/public/shared/delegates
 ARG DELEGATEVERSION
 
+RUN mkdir -m 777 -p client-tools/terraform/1.3.5 \
+&& cd client-tools/terraform/1.3.5 && curl -O -L https://releases.hashicorp.com/terraform/1.3.5/terraform_1.3.5_linux_amd64.zip \ 
+&& unzip /opt/harness-delegate/client-tools/terraform/1.3.5/terraform_1.3.5_linux_amd64.zip
+
 RUN mkdir -m 777 -p client-tools/kubectl/v1.28.7 \
   && curl -s -L -o client-tools/kubectl/v1.28.7/kubectl https://app.harness.io/public/shared/tools/kubectl/release/v1.28.7/bin/linux/$TARGETARCH/kubectl \
   && mkdir -m 777 -p client-tools/helm/v3.12.0 \
@@ -69,6 +74,7 @@ RUN mkdir -m 777 -p client-tools/kubectl/v1.28.7 \
   && chown -R 1001 /opt/harness-delegate \
   && chown -R 1001 $JAVA_HOME/lib/security/cacerts
 
+ENV PATH=/opt/harness-delegate/client-tools/terraform/1.3.5/:$PATH
 ENV PATH=/opt/harness-delegate/client-tools/kubectl/v1.28.7/:$PATH
 ENV PATH=/opt/harness-delegate/client-tools/go-template/v0.4.5/:$PATH
 ENV PATH=/opt/harness-delegate/client-tools/chartmuseum/v0.15.0/:$PATH
@@ -79,7 +85,7 @@ ENV PATH=/opt/harness-delegate/client-tools/kubelogin/v0.1.1/:$PATH
 ENV PATH=/opt/harness-delegate/client-tools/harness-credentials-plugin/v0.1.0/:$PATH
 ENV SHARED_CA_CERTS_PATH=/opt/harness-delegate/additional_certs_pem_split
 
-RUN curl -s -L -o delegate.jar $BASEURL/$DELEGATEVERSION/delegate.jar
+COPY delegate.jar /opt/harness-delegate/delegate.jar
 
 USER 1001
 
