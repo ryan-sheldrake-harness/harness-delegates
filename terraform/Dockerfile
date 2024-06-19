@@ -85,7 +85,8 @@ ENV PATH=/opt/harness-delegate/client-tools/kubelogin/v0.1.1/:$PATH
 ENV PATH=/opt/harness-delegate/client-tools/harness-credentials-plugin/v0.1.0/:$PATH
 ENV SHARED_CA_CERTS_PATH=/opt/harness-delegate/additional_certs_pem_split
 
-COPY delegate.jar /opt/harness-delegate/delegate.jar
+# COPY delegate.jar /opt/harness-delegate/delegate.jar
+RUN curl -s -L -o delegate.jar $BASEURL/$DELEGATEVERSION/delegate.jar
 
 USER 1001
 
