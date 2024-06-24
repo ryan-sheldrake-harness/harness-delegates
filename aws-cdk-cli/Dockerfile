@@ -46,10 +46,10 @@ ARG TARGETARCH
 ARG BASEURL=https://app.harness.io/public/shared/delegates
 ARG DELEGATEVERSION
 
-# Note for amd 64 build use #   && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+# Note for amd 64 build use #   && curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" \ https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip
 RUN mkdir -m 777 -p client-tools/aws-cli \
   && cd client-tools/aws-cli \
-  && curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"  \
+  && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
   && unzip awscliv2.zip \
   && ./aws/install 
 
@@ -65,8 +65,8 @@ ENV PATH=/opt/harness-delegate/client-tools/harness-credentials-plugin/v0.1.0/:$
 ENV SHARED_CA_CERTS_PATH=/opt/harness-delegate/additional_certs_pem_split
 ENV PATH=/opt/harness-delegate/client-tools/aws-cli/:$PATH
 
-COPY delegate.jar /opt/harness-delegate/delegate.jar
-# RUN curl -s -L -o delegate.jar $BASEURL/$DELEGATEVERSION/delegate.jar
+#COPY delegate.jar /opt/harness-delegate/delegate.jar
+RUN curl -s -L -o delegate.jar $BASEURL/$DELEGATEVERSION/delegate.jar
 
 USER 1001
 
